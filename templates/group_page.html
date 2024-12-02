@@ -94,10 +94,12 @@
                     playerCell.rowSpan = 3;
                     const playerContent = document.createElement('div');
                     playerContent.textContent = game.player_1;
+                    playerContent.textContent += ` ( ${game.odds_player_1} )`;
                     const vsText = document.createElement('div');
                     vsText.textContent = 'vs.';
                     const player2Content = document.createElement('div');
                     player2Content.textContent = game.player_2;
+                    player2Content.textContent += ` ( ${game.odds_player_2} )`;
 
                     // Highlight winner
                     if (game.winner === game.player_1) {

@@ -1,0 +1,3 @@
+./dartsguesser-venv/*
+./migrations/*
+./__pycache__/*

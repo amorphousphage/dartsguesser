@@ -342,6 +342,8 @@ def get_games():
                 'sets_won_player_1': game.sets_won_player_1,
                 'sets_won_player_2': game.sets_won_player_2,
                 'winner': game.winner,
+                'odds_player_1': game.odds_player_1,
+                'odds_player_2': game.odds_player_2,
                 'guess': game_guesses_dict.get(game.id, 'No guess')  # Default to 'No guess' if not found
             })
 
@@ -435,6 +437,8 @@ def get_games_for_group():
                 'sets_won_player_1': game.sets_won_player_1,
                 'sets_won_player_2': game.sets_won_player_2,
                 'winner': game.winner,
+                'odds_player_1': game.odds_player_1,
+                'odds_player_2': game.odds_player_2,
                 'guesses': guesses_with_user_name  # List of guesses with username and winner guess
             })
 
