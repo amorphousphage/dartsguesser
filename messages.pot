@@ -1,0 +1,361 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-12-01 11:46+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app.py:81
+msgid "Username is already taken. Please choose a different one."
+msgstr ""
+
+#: app.py:89
+msgid "Registration successful! Please log in."
+msgstr ""
+
+#: app.py:103
+msgid "Login successful!"
+msgstr ""
+
+#: app.py:105
+msgid "Invalid credentials. Please try again."
+msgstr ""
+
+#: app.py:111
+msgid "You have been logged out."
+msgstr ""
+
+#: app.py:122
+msgid "Please enter the username and then click the forgot password link."
+msgstr ""
+
+#: app.py:130 app.py:138 app.py:259
+msgid "Username not found."
+msgstr ""
+
+#: app.py:155
+msgid "Password successfully updated."
+msgstr ""
+
+#: app.py:159
+msgid "Incorrect answer to security question."
+msgstr ""
+
+#: app.py:170
+msgid "Please log in to access the dashboard."
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "Time of the Match: {} (GMT)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "No guess"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "Tournament Winner (+ 20 Points)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "Player with most 180s thrown (+ 10 Points)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid ""
+"Number of 180s thrown total (+ max. 40 Points (-5 Points for every 10 "
+"180s off))"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "Number of 9-darters thrown (+ 20 Points)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "Player with the highest checkout (+ 20 Points)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "(+ 0 points)"
+msgstr ""
+
+#: app.py:187 app.py:309
+msgid "({} points off from {} (+{} points))"
+msgstr ""
+
+#: app.py:187
+msgid "Guess missed"
+msgstr ""
+
+#: app.py:211
+msgid "Are you sure you want to leave this group?"
+msgstr ""
+
+#: app.py:234
+msgid "Group created successfully!"
+msgstr ""
+
+#: app.py:256
+msgid "You have successfully joined the group!"
+msgstr ""
+
+#: app.py:261
+msgid "Group not found. Please check the group ID and try again."
+msgstr ""
+
+#: app.py:309
+msgid "Category"
+msgstr ""
+
+#: app.py:309
+msgid "Guess"
+msgstr ""
+
+#: app.py:309
+msgid "Place"
+msgstr ""
+
+#: app.py:309
+msgid "Username"
+msgstr ""
+
+#: app.py:309
+msgid "Points"
+msgstr ""
+
+#: app.py:709
+msgid "Guesses saved successfully!"
+msgstr ""
+
+#: app.py:737
+msgid "Overall Tournament Guesses saved successfully!"
+msgstr ""
+
+#: templates/base.html:124
+msgid "English"
+msgstr ""
+
+#: templates/base.html:125
+msgid "Deutsch"
+msgstr ""
+
+#: templates/create-group.html:3 templates/create-group.html:8
+#: templates/create-group.html:15
+msgid "Create a group"
+msgstr ""
+
+#: templates/create-group.html:12 templates/my-groups.html:20
+msgid "Group Name"
+msgstr ""
+
+#: templates/dashboard.html:9
+msgid "Welcome"
+msgstr ""
+
+#: templates/dashboard.html:9
+msgid "to your Darts WC 2025 dashboard!"
+msgstr ""
+
+#: templates/dashboard.html:11
+msgid ""
+"Place your guesses in the \"My Guesses\" page by selecting the Overall "
+"Tournament Guesses or any round first. Don't forget to save your guesses!"
+msgstr ""
+
+#: templates/dashboard.html:12
+msgid ""
+"Create and join some groups with friends in the \"My Groups\" page. There"
+" you can also see how you perform in comparison to your friends!"
+msgstr ""
+
+#: templates/dashboard.html:13
+msgid "Learn how points are awarded"
+msgstr ""
+
+#: templates/dashboard.html:16 templates/my-guesses.html:3
+msgid "My Guesses"
+msgstr ""
+
+#: templates/dashboard.html:19 templates/my-groups.html:3
+#: templates/my-groups.html:8
+msgid "My Groups"
+msgstr ""
+
+#: templates/forgot_password.html:3
+msgid "Forgot Password"
+msgstr ""
+
+#: templates/forgot_password.html:8
+msgid "Enter your username:"
+msgstr ""
+
+#: templates/forgot_password.html:10 templates/reset_password.html:17
+msgid "Submit"
+msgstr ""
+
+#: templates/group_page.html:3
+msgid "Group: "
+msgstr ""
+
+#: templates/group_page.html:7
+msgid "Guesses for the group "
+msgstr ""
+
+#: templates/group_page.html:9
+msgid "Join code for this group: "
+msgstr ""
+
+#: templates/group_page.html:10
+msgid "Please send this code to a friend to invite them to the group."
+msgstr ""
+
+#: templates/group_page.html:14
+msgid "Show the group's Leaderboard"
+msgstr ""
+
+#: templates/group_page.html:15 templates/my-guesses.html:11
+msgid "Overall Tournament Guesses"
+msgstr ""
+
+#: templates/group_page.html:16 templates/my-guesses.html:12
+msgid "Round 1"
+msgstr ""
+
+#: templates/group_page.html:17 templates/my-guesses.html:13
+msgid "Round 2"
+msgstr ""
+
+#: templates/group_page.html:18 templates/my-guesses.html:14
+msgid "Round 3"
+msgstr ""
+
+#: templates/group_page.html:19 templates/my-guesses.html:15
+msgid "Final 16"
+msgstr ""
+
+#: templates/group_page.html:20 templates/my-guesses.html:16
+msgid "Quarter Final"
+msgstr ""
+
+#: templates/group_page.html:21 templates/my-guesses.html:17
+msgid "Semi Final"
+msgstr ""
+
+#: templates/group_page.html:22 templates/my-guesses.html:18
+msgid "Final"
+msgstr ""
+
+#: templates/home.html:7
+msgid "Welcome to DartsGuesser"
+msgstr ""
+
+#: templates/home.html:9
+msgid ""
+"The place where you can submit a guess for every game and explore overall"
+" tournament statistics for the 2025 PDC Darts World Championship."
+msgstr ""
+
+#: templates/home.html:10
+msgid ""
+"Guess on your own or create and join a group with friends for a friendly "
+"competition to see who is the best guesser for this year's Darts World "
+"Championship."
+msgstr ""
+
+#: templates/home.html:11
+msgid "Learn how it works"
+msgstr ""
+
+#: templates/home.html:14 templates/register.html:7 templates/register.html:24
+msgid "Register"
+msgstr ""
+
+#: templates/home.html:15
+msgid "Login"
+msgstr ""
+
+#: templates/join-group.html:3
+msgid "Join a group"
+msgstr ""
+
+#: templates/join-group.html:8
+msgid "Join an Existing Group"
+msgstr ""
+
+#: templates/join-group.html:12
+msgid "Group Identifier (8 characters)"
+msgstr ""
+
+#: templates/join-group.html:15 templates/my-groups.html:14
+msgid "Join Group"
+msgstr ""
+
+#: templates/login.html:15
+msgid "Forgot password?"
+msgstr ""
+
+#: templates/my-groups.html:11
+msgid "Create Group"
+msgstr ""
+
+#: templates/my-groups.html:21
+msgid "Actions"
+msgstr ""
+
+#: templates/my-groups.html:34
+msgid "Leave group"
+msgstr ""
+
+#: templates/my-guesses.html:7
+msgid "Make your tournament guesses"
+msgstr ""
+
+#: templates/my-guesses.html:23
+msgid ""
+"Please make sure you save your guesses each time before you view another "
+"round (or the overall tournament guesses)."
+msgstr ""
+
+#: templates/my-guesses.html:27
+msgid "Save my guesses"
+msgstr ""
+
+#: templates/register.html:3
+msgid "Register a new player"
+msgstr ""
+
+#: templates/register.html:16
+msgid ""
+"Enter a security question of your choice and your answer. In case you "
+"forget the password, you will be prompted with the question and need to "
+"answer exactly as you written in the answer field."
+msgstr ""
+
+#: templates/reset_password.html:3
+msgid "Reset Password"
+msgstr ""
+
+#: templates/reset_password.html:8
+msgid "Security Question:"
+msgstr ""
+
+#: templates/reset_password.html:11
+msgid "Answer:"
+msgstr ""
+
+#: templates/reset_password.html:14
+msgid "New Password:"
+msgstr ""
+

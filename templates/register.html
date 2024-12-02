@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Register a new player') }}{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>{{ _('Register') }}</h1>
+        <form method="POST">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <p>
+                {{ _('Enter a security question of your choice and your answer. In case you forget the password, you will be prompted with the question and need to answer exactly as you written in the answer field.') }}
+            </p>
+            <div class="form-group">
+                <input type="text" name="security_question" placeholder="Security Question" required>
+            </div>
+            <div class="form-group">
+                <input type="text" name="security_answer" placeholder="Answer" required>
+            </div>
+            <button class="btn btn-success btn-lg mb-3" type="submit">{{ _('Register') }}</button>
+        </form>
+    </div>
+{% endblock %}

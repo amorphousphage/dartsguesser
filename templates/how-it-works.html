@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('How It Works') }}{% endblock %}
+
+{% block content %}
+<div class="how-it-works-container">
+    <h1>{{ _('How It Works') }}</h1>
+    <p>{{ _('This is how points are awarded in DartsGuesser:') }}</p>
+    <ul class="points-list">
+        <li><strong>{{ _('5 Points') }}</strong>: {{ _('For guessing the correct winner of any match.') }}</li>
+        <li><strong>{{ _('20 Points') }}</strong>: {{ _('For predicting the correct World Champion.') }}</li>
+        <li><strong>{{ _('10 Points') }}</strong>: {{ _('For correctly guessing the player with the most 180s.') }}</li>
+        <li><strong>{{ _('Up to 40 Points') }}</strong>: {{ _('For guessing the number of thrown 180s throughout the tournament. For every 10 180s you are off, you will lose 5 points from the maximum of 40. No negative points are awarded.') }}</li>
+        <li><strong>{{ _('20 Points') }}</strong>: {{ _('For guessing the number of 9-darters throughout the tournament.') }}</li>
+        <li><strong>{{ _('20 Points') }}</strong>: {{ _('For correctly guessing the player with the highest checkouts throughout the tournament. If multiple players score the same highest checkout (which does not have to be 170), the player with more counts of this checkout wins. If they tie in the counts, the next highest checkout is considered.') }}</li>
+    </ul>
+    <p>{{ _('Remember to place your guesses no later than 1 hour before the scheduled start time of a match (London time) and provide your overall tournament guesses before 6 pm (London Time) on the day of the first match! Game On!') }}</p>
+</div>
+{% endblock %}

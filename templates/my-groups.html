@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('My Groups') }} {% endblock %}
+
+{% block content %}
+<!-- Code to generate two linking buttons to create and join groups -->
+<div class="container">
+    <h1 class="my-4">{{ _('My Groups') }}</h1>
+
+    <!-- Create Group Button -->
+    <a href="{{ url_for('create_group') }}" class="btn btn-primary btn-lg mb-3">{{ _('Create Group') }}</a>
+
+    <!-- Join Group Button -->
+    <a href="{{ url_for('join_group') }}" class="btn btn-success btn-lg mb-3">{{ _('Join Group') }}</a>
+
+    <!-- Code to create a table populating it with all groups assigned to the user with the option to access or leave them -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>{{ _('Group Name') }}</th>
+                <th>{{ _('Actions') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamically populate groups -->
+            {% for group in groups %}
+            <tr>
+                <td>
+                    <!-- Link to the group page -->
+                    <a href="/{{ group.code }}" class="text-primary">{{ group.name }}</a>
+                </td>
+                <td class="text-right">
+                    <!-- Link to leave group -->
+                    <a href="#" class="btn btn-danger btn-sm" onclick="leaveGroup('{{ group.code }}')">{{ _('Leave group') }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+ <!-- Function for translations -->
+    <script type="text/javascript">
+    // Pass translated strings from Python to JavaScript
+    var translations = {
+        confirmleavinggroup: "{{ translate_confirm_leaving_group }}"
+    };
+    </script>
+
+<!-- Script to leave a group -->
+<script>
+    function leaveGroup(groupCode) {
+        if (confirm(translations.confirmleavinggroup)) {
+            fetch('/leave_group', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ group_code: groupCode })
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to leave the group. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+    }
+</script>
+{% endblock %}

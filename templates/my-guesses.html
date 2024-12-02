@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('My Guesses') }} {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">{{ _('Make your tournament guesses') }}</h1>
+
+        <!-- Buttons to display the games for each round or the overall tournament guesses -->
+        <div class="mb-3">
+            <button class="btn btn-info btn-lg mb-3" onclick="showOverallTournamentGuesses()">{{ _('Overall Tournament Guesses') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('1/64-finals')">{{ _('Round 1') }}</button>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('1/32-finals')">{{ _('Round 2') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('1/16-finals')">{{ _('Round 3') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('1/8-finals')">{{ _('Final 16') }}</button>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('Quarter-finals')">{{ _('Quarter Final') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('Semi-finals')">{{ _('Semi Final') }}</button>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('Final')">{{ _('Final') }}</button><br>
+        </div>
+
+        <!-- Warning message -->
+        <p style="color: red; font-weight: bold;">
+            {{ _('Please make sure you save your guesses each time before you view another round (or the overall tournament guesses).') }}
+        </p>
+
+        <!-- Save Button -->
+        <button class="btn btn-success btn-lg mb-3" id="saveGuessesButton">{{ _('Save my guesses') }}</button>
+
+        <!-- Tables for guesses will appear here -->
+        <div id="roundTables"></div>
+    </div>
+
+
+    <!-- Function for translations -->
+    <script type="text/javascript">
+    // Pass translated strings from Python to JavaScript
+    var translations = {
+        match_time: "{{ translate_match_time }}",
+        noguess: "{{ translate_no_guess }}",
+        matchinprogress: "{{ translate_match_in_progress }}",
+        categorytitle: "{{ translate_category_title }}",
+        guesstitle: "{{ translate_guess_title }}",
+        tournamentwinner: "{{ translate_tournament_winner }}",
+        most180sthrown: "{{ translate_most_180s_thrown }}",
+        numberof180s: "{{ translate_number_180s_thrown }}",
+        numberof9darters: "{{ translate_number_of_9_darters }}",
+        playerhighestcheckout: "{{ translate_player_highest_checkout }}",
+        zeropoints: "{{ translate_zero_points }}",
+        pointstranslation180: " {{ translate_num180_points }}",
+        guessmissed: "{{ translate_guess_missed }}"
+    };
+    </script>
+
+    <!-- Function to display a table with matches for each round -->
+    <script>
+    function showRound(round) {
+        const roundTable = document.getElementById('roundTables');
+        roundTable.innerHTML = ''; // Clear previous round tables
+
+        // Fetch games for the selected round
+        fetch(`/get_games?round_name=${round}`)
+            .then(response => response.json())
+            .then(games => {
+                if (games.error) {
+                    console.error('Error fetching games:', games.error);
+                    return;
+                }
+
+                // Get user's current time and convert to London time
+                const currentDate = new Date();
+                const userTimeZoneOffset = currentDate.getTimezoneOffset() * 60 * 1000; // Offset in ms
+                const londonTime = new Date(currentDate.getTime()- userTimeZoneOffset);
+
+                games.forEach(game => {
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'mt-3');
+
+                    // Create matchDayCutoff by subtracting 1 hour from matchDate
+                    const matchDayCutoff = new Date(game.match_time);
+                    matchDayCutoff.setHours(matchDayCutoff.getHours() - 1);
+                    // Time of the Match
+                    const timeRow = document.createElement('tr');
+                    const timeCell = document.createElement('td');
+                    timeCell.colSpan = 3;
+                    timeCell.textContent = translations.match_time.replace('{}', game.match_time);
+                    timeRow.appendChild(timeCell);
+                    table.appendChild(timeRow);
+
+                    // Players names and vs. field generaton
+                    const playersRow = document.createElement('tr');
+                    const playerCell = document.createElement('td');
+                    playerCell.style.width = '40%';
+                    playerCell.rowSpan = 3;
+                    const playerContent = document.createElement('div');
+                    playerContent.textContent = game.player_1;
+                    const vsText = document.createElement('div');
+                    vsText.textContent = 'vs.';
+                    const player2Content = document.createElement('div');
+                    player2Content.textContent = game.player_2;
+
+                    // Highlight winner
+                    if (game.winner === game.player_1) {
+                        playerContent.style.fontWeight = 'bolder';
+                        playerContent.style.color = 'green';
+                    } else if (game.winner === game.player_2) {
+                        player2Content.style.fontWeight = 'bolder';
+                        player2Content.style.color = 'green';
+                    }
+
+                    playerCell.appendChild(playerContent);
+                    playerCell.appendChild(vsText);
+                    playerCell.appendChild(player2Content);
+                    playersRow.appendChild(playerCell);
+                    table.appendChild(playersRow);
+
+                    // Sets won
+                    const setsRow = document.createElement('tr');
+                    const setsCell = document.createElement('td');
+                    setsCell.style.width = '10%';
+                    setsCell.rowSpan = 3;
+                    setsCell.textContent = `${game.sets_won_player_1} : ${game.sets_won_player_2}`;
+                    setsRow.appendChild(setsCell);
+                    table.appendChild(setsRow);
+
+                    // Guess row (Drop-down or Text)
+                    const guessRow = document.createElement('tr');
+                    const guessCell = document.createElement('td');
+                    guessCell.style.width = '40%';
+
+                    // Add hidden game_id input
+                    const gameIdInput = document.createElement('input');
+                    gameIdInput.type = 'hidden';
+                    gameIdInput.name = 'game_id';
+                    gameIdInput.value = game.game_id;  // Set the game ID value
+                    guessCell.appendChild(gameIdInput);
+
+                    // If the match day 1hour prior to start has not been reached yet, show a dropdown
+                    if (londonTime < matchDayCutoff) {
+                        // Drop-down for matches where guesses are still allowed
+                        const select = document.createElement('select');
+                        select.classList.add('form-control');
+
+                        const optionNoGuess = document.createElement('option');
+                        optionNoGuess.value = 'No guess';
+                        optionNoGuess.textContent = translations.noguess;
+
+                        const optionPlayer1 = document.createElement('option');
+                        optionPlayer1.value = game.player_1;
+                        optionPlayer1.textContent = game.player_1;
+
+                        const optionPlayer2 = document.createElement('option');
+                        optionPlayer2.value = game.player_2;
+                        optionPlayer2.textContent = game.player_2;
+
+                        select.appendChild(optionNoGuess);
+                        select.appendChild(optionPlayer1);
+                        select.appendChild(optionPlayer2);
+
+                        // Pre-select the guess
+                        if (game.guess && game.guess !== 'No guess') {
+                            select.value = game.guess;
+                        }
+
+                        guessCell.appendChild(select);
+                    } else {
+                        // Text for past matches or missed guesses (in case it is later than 9 am on matchday or after)
+                        const guessText = document.createElement('div');
+                        if (!game.guess || game.guess === 'No guess') {
+                            guessText.textContent = translations.guessmissed;
+                            guessText.style.color = 'red';
+                        } else {
+                            guessText.textContent = game.guess;
+
+                            // Highlight correct guess
+                            if (guessText.textContent === game.winner) {
+                                guessText.style.color = 'green';
+
+                            // Highlight in yellow if a game is not finished and append "Match still in progress" to the guess
+                            } else if (game.winner === 'Game not finished') {
+                                guessText.style.color = 'orange';
+                                guessText.textContent += translations.matchinprogress;
+                            // Highlight wrong guesses
+                            } else {
+                                guessText.style.color = 'red';
+                            }
+                        }
+                        guessCell.appendChild(guessText);
+                    }
+
+                    guessRow.appendChild(guessCell);
+                    table.appendChild(guessRow);
+
+                    // Append the table
+                    roundTable.appendChild(table);
+
+                    // Add spacing between tables
+                    roundTable.appendChild(document.createElement('br'));
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching games:', error);
+            });
+        }
+    </script>
+
+    <!-- Script to show the table with the overall tournament guesses -->
+    <script>
+    function showOverallTournamentGuesses() {
+        const roundTable = document.getElementById('roundTables');
+        roundTable.innerHTML = ''; // Clear any previous content
+
+        // Create the overall tournament table
+        const table = document.createElement('table');
+        table.classList.add('table', 'mt-3');
+
+        // Create the header row
+        const headerRow = document.createElement('tr');
+        const headerCell1 = document.createElement('th');
+        headerCell1.textContent = translations.categorytitle;
+        const headerCell2 = document.createElement('th');
+        headerCell2.textContent = translations.guesstitle;
+        headerRow.appendChild(headerCell1);
+        headerRow.appendChild(headerCell2);
+        table.appendChild(headerRow);
+
+        // Create a function to populate a dropdown list with player names
+        function createPlayerDropdown(players, categoryId, selectedValue) {
+            const select = document.createElement('select');
+            select.classList.add('form-control');
+            select.id = categoryId;
+
+            // add a "No guess" option when a player hasn't guesses yet
+            const optionNoGuess = document.createElement('option');
+            optionNoGuess.value = 'No guess';
+            optionNoGuess.textContent = translations.noguess;
+            select.appendChild(optionNoGuess);
+
+            // Loop through players and create an option for each
+            players.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player;
+                option.textContent = player;
+                if (player === selectedValue) {
+                    option.selected = true; // Pre-select the guess if it matches
+                }
+                select.appendChild(option);
+            });
+            return select;
+        }
+        // Fetch player names and existing guesses as well as the time for each match from the database
+        Promise.all([
+            fetch('/get_players').then(response => response.json()), // Fetch player names
+            fetch('/get_user_tournament_guesses').then(response => response.json()), // Fetch existing guesses
+            fetch('/get_all_match_times').then(response => response.json()) // Fetch all match times
+        ])
+        .then(([players, existingGuesses, matchTimes]) => {
+            if (!players || players.length === 0) {
+                console.error('No players found');
+                return;
+            }
+
+            // Ensure matchTimes contains match_times array
+            if (matchTimes && matchTimes.match_times) {
+                const matchTimesArray = matchTimes.match_times;
+                // Map each match time to a Date object, assigning the correct year and select the very first match_time of the first match of the tournament
+                const earliestMatchDate = new Date(Math.min(...matchTimes.match_times.map(date => new Date(date).getTime())));
+                // Calculate the 6 PM London cutoff time for that earliest match of the tournament
+                const cutoffTime = new Date(earliestMatchDate.getTime());
+                cutoffTime.setHours(18, 0, 0, 0); // Set to 6 PM
+
+                // Add rows for each category
+                const categories = [
+                    { label: translations.tournamentwinner, inputType: "dropdown", id: "tournamentWinner", guessType: "winner" },
+                    { label: translations.most180sthrown, inputType: "dropdown", id: "most180s", guessType: "most_180" },
+                    { label: translations.numberof180s, inputType: "number", id: "total180s", guessType: "num_180" },
+                    { label: translations.numberof9darters, inputType: "number", id: "total9Darters", guessType: "num_9_darters" },
+                    { label: translations.playerhighestcheckout, inputType: "dropdown", id: "highestCheckout", guessType: "highest_checkout" }
+                ];
+
+                categories.forEach(category => {
+                    const row = document.createElement('tr');
+
+                    // Generate Category label
+                    const labelCell = document.createElement('td');
+                    labelCell.textContent = category.label;
+                    row.appendChild(labelCell);
+
+                    // Generate Input field (number) or dropdown based on category type
+                    const inputCell = document.createElement('td');
+                    let selectedValue = null;
+
+                    // Check if an existing guess for this category exists
+                    const existingGuess = existingGuesses.find(guess => guess.guess_type === category.guessType);
+                    if (existingGuess && existingGuess.value !== 'No guess' && existingGuess.value !== '') {
+                        selectedValue = existingGuess.value; // Set the saved value as selected
+                    }
+                    else {
+                        selectedValue = translations.noguess;
+                    }
+                    // Check if the first match starts today and it's later than the cutoff time or the first match is already in the past
+                    const isBeforeCutoff = (new Date()).getTime() < cutoffTime;
+                    // If we are before the cutoff, generate drop-downs and input fields for the player to interact with
+                    if (isBeforeCutoff) {
+                        if (category.inputType === 'dropdown') {
+                            inputCell.appendChild(createPlayerDropdown(players, category.id, selectedValue));
+                        } else if (category.inputType === 'number') {
+                            const inputField = document.createElement('input');
+                            inputField.type = 'number';
+                            inputField.classList.add('form-control');
+                            inputField.min = '0';
+                            inputField.id = category.id; // Set the ID for the input field
+                            if (selectedValue) {
+                                inputField.value = selectedValue; // Set the saved value as the input value
+                            }
+                            inputCell.appendChild(inputField);
+                        }
+                    // If we are past the cutoff make th form read only by showing only text
+                    } else {
+                        const guessText = document.createElement('div');
+
+                        guessText.textContent = selectedValue;
+                        inputCell.appendChild(guessText);
+                    }
+                    row.appendChild(inputCell);
+
+                    // Append the row to the table
+                    table.appendChild(row);
+                });
+
+                // Append the table to the roundTables container
+                roundTable.appendChild(table);
+                }
+        })
+        .catch(error => {
+            console.error('Error fetching players or existing guesses:', error);
+        });
+    }
+    </script>
+    <!-- Script to save any guesses when the Save Guesses button is pressed -->
+    <script>
+    document.getElementById('saveGuessesButton').addEventListener('click', function() {
+        const roundTables = document.querySelectorAll('#roundTables table');
+        const formData = new FormData();  // FormData for game guesses
+        const tournamentFormData = new FormData();  // FormData for tournament guesses
+        // Flag to track if we have game guesses or tournament guesses
+        let isTournamentGuess = true;
+
+        // Loop through each table and collect the guesses and game_id
+        roundTables.forEach(table => {
+            const gameIdInput = table.querySelector('input[name="game_id"]');  // Check if game_id exists
+            const selectElement = table.querySelector('select');  // Get the selected guess
+            // If game_id exists, it's a game guess
+            if (selectElement && gameIdInput && gameIdInput.value) {
+                const gameId = gameIdInput.value;  // Get the game_id
+                const selectedGuess = selectElement.value;
+                formData.append('game_ids[]', gameId);  // Append game_id to the form data
+                formData.append('guesses[]', selectedGuess);  // Append the selected guess to the form data
+
+                // Set flag to false, indicating game guesses exist
+                isTournamentGuess = false;
+            } else if (!gameIdInput) {
+                // Collect overall tournament guesses if no game_id
+                const tournamentWinner = document.getElementById('tournamentWinner').value;
+                const most180s = document.getElementById('most180s').value;
+                const total180s = document.getElementById('total180s').value;
+                const total9Darters = document.getElementById('total9Darters').value;
+                const highestCheckout = document.getElementById('highestCheckout').value;
+
+                tournamentFormData.append('guesses[]', tournamentWinner);
+                tournamentFormData.append('guess_types[]', 'winner');
+
+                tournamentFormData.append('guesses[]', most180s);
+                tournamentFormData.append('guess_types[]', 'most_180');
+
+                tournamentFormData.append('guesses[]', total180s);
+                tournamentFormData.append('guess_types[]', 'num_180');
+
+                tournamentFormData.append('guesses[]', total9Darters);
+                tournamentFormData.append('guess_types[]', 'num_9_darters');
+
+                tournamentFormData.append('guesses[]', highestCheckout);
+                tournamentFormData.append('guess_types[]', 'highest_checkout');
+
+                // Set flag to true, indicating tournament guesses exist
+                isTournamentGuess = true;
+            }
+        });
+
+        // Send only game guesses if it's a game guess
+        if (!isTournamentGuess) {
+            fetch('/save_guesses', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the success message
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error saving game guesses:', error);
+            });
+        }
+        // Send only tournament guesses if it's a tournament guess
+        else {
+            fetch('/save_tournament_guesses', {
+                method: 'POST',
+                body: tournamentFormData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);  // Show success message for tournament guesses
+            })
+            .catch(error => {
+                console.error('Error saving tournament guesses:', error);
+            });
+        }
+    });
+    </script>
+
+{% endblock %}
+

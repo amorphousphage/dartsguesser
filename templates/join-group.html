@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Join a group') }}{% endblock %}
+
+{% block content %}
+    <!-- Code to enter a group code for joining a group -->
+    <div class="container">
+        <h1 class="my-4">{{ _('Join an Existing Group') }}</h1>
+
+        <form method="POST" action="{{ url_for('join_group') }}">
+            <div class="form-group">
+                <label for="groupId">{{ _('Group Identifier (8 characters)') }}</label>
+                <input type="text" class="form-control" id="groupId" name="group_id" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-lg">{{ _('Join Group') }}</button>
+        </form>
+    </div>
+{% endblock %}

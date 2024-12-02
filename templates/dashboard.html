@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <!-- Code to create linking buttons to the groups and to the guesses section as well as a logout button -->
+    <div class="container">
+        <!-- Header Text -->
+        <h1 class="my-4">{{ _('Welcome') }} {{ user.username }} {{ _('to your Darts WC 2025 dashboard!') }}</h1>
+             <p class="intro-text">
+                {{ _('Place your guesses in the \"My Guesses\" page by selecting the Overall Tournament Guesses or any round first. Don\'t forget to save your guesses!') }}
+                {{ _('Create and join some groups with friends in the \"My Groups\" page. There you can also see how you perform in comparison to your friends!') }}
+                <a href="{{ url_for('how_it_works') }}" class="how-it-works-link">{{ _('Learn how points are awarded') }}</a>.
+            </p>
+            <!-- My Guesses Button -->
+            <a href="{{ url_for('my_guesses') }}" class="btn btn-primary btn-lg mb-5 mr-4">{{ _('My Guesses') }}</a>
+
+            <!-- My Groups Button -->
+            <a href="{{ url_for('my_groups') }}" class="btn btn-primary btn-lg mb-5">{{ _('My Groups') }}</a><br>
+
+            <!-- Log Out Button -->
+            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg">Log Out</a>
+    </div>
+    <!-- Bootstrap JS (Optional, for responsiveness) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

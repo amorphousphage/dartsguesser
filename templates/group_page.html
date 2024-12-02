@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Group: ') }} {{ group_name }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="my-4">{{ _('Guesses for the group ') }} {{ group_name }}</h1>
+        <p>
+           {{ _('Join code for this group: ') }} <strong> {{ group_code }} </strong><br>
+           {{ _('Please send this code to a friend to invite them to the group.') }}
+        </p>
+        <!-- Buttons to display the games for each round or the overall tournament guesses -->
+        <div class="mb-3">
+            <button class="btn btn-success btn-lg mb-3" onclick="showLeaderboard()">{{ _('Show the group\'s Leaderboard') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3" onclick="showOverallTournamentGuesses()">{{ _('Overall Tournament Guesses') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('1/64-finals')">{{ _('Round 1') }}</button>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('1/32-finals')">{{ _('Round 2') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('1/16-finals')">{{ _('Round 3') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('1/8-finals')">{{ _('Final 16') }}</button>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('Quarter-finals')">{{ _('Quarter Final') }}</button><br>
+            <button class="btn btn-info btn-lg mb-3 mr-4" onclick="showRound('Semi-finals')">{{ _('Semi Final') }}</button>
+            <button class="btn btn-info btn-lg mb-3" onclick="showRound('Final')">{{ _('Final') }}</button><br>
+        </div>
+
+        <!-- Tables for guesses will appear here -->
+        <div id="roundTables"></div>
+    </div>
+
+    <!-- Function for translations -->
+    <script type="text/javascript">
+    // Pass translated strings from Python to JavaScript
+    var translations = {
+        match_time: "{{ translate_match_time }}",
+        noguess: "{{ translate_no_guess }}",
+        matchinprogress: "{{ translate_match_in_progress }}",
+        categorytitle: "{{ translate_category_title }}",
+        guesstitle: "{{ translate_guess_title }}",
+        tournamentwinner: "{{ translate_tournament_winner }}",
+        most180sthrown: "{{ translate_most_180s_thrown }}",
+        numberof180s: "{{ translate_number_180s_thrown }}",
+        numberof9darters: "{{ translate_number_of_9_darters }}",
+        playerhighestcheckout: "{{ translate_player_highest_checkout }}",
+        zeropoints: "{{ translate_zero_points }}",
+        pointstranslation180: " {{ translate_num180_points }}",
+        place: "{{ translate_place_title }}",
+        username: "{{ translate_username_title }}",
+        points: "{{ translate_points_title }}",
+        points_180: "{{ translate_points_180_calc }}"
+    };
+    </script>
+
+    <!-- Function to display a table with matches for each round -->
+    <script>
+    function showRound(round) {
+        // Store the logged in user id
+        var loggedInUserId = {{ logged_in_user_id | tojson }};
+        const roundTable = document.getElementById('roundTables');
+        roundTable.innerHTML = ''; // Clear previous round tables
+
+        // Fetch games for the selected round
+        fetch(`/get_games_for_group?round_name=${round}&group_code={{ group_code }}`)
+            .then(response => response.json())
+            .then(games => {
+                if (games.error) {
+                    console.error('Error fetching games:', games.error);
+                    return;
+                }
+
+                // Get user's current time and convert to London time
+                const currentDate = new Date();
+                const userTimeZoneOffset = currentDate.getTimezoneOffset() * 60 * 1000; // Offset in ms
+                const londonTime = new Date(currentDate.getTime()- userTimeZoneOffset);
+
+                games.forEach(game => {
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'mt-3');
+
+                    // Create matchDayCutoff by subtracting 1 hour from matchDate
+                    const matchDayCutoff = new Date(game.match_time);
+                    matchDayCutoff.setHours(matchDayCutoff.getHours() - 1);
+
+                    // Time of the Match
+                    const timeRow = document.createElement('tr');
+                    const timeCell = document.createElement('td');
+                    timeCell.colSpan = 2;
+                    timeCell.textContent = translations.match_time.replace('{}', game.match_time);
+                    timeRow.appendChild(timeCell);
+                    table.appendChild(timeRow);
+
+                    // Players names and vs. field generaton
+                    const playersRow = document.createElement('tr');
+                    const playerCell = document.createElement('td');
+                    playerCell.style.width = '40%';
+                    playerCell.rowSpan = 3;
+                    const playerContent = document.createElement('div');
+                    playerContent.textContent = game.player_1;
+                    const vsText = document.createElement('div');
+                    vsText.textContent = 'vs.';
+                    const player2Content = document.createElement('div');
+                    player2Content.textContent = game.player_2;
+
+                    // Highlight winner
+                    if (game.winner === game.player_1) {
+                        playerContent.style.fontWeight = 'bolder';
+                        playerContent.style.color = 'green';
+                    } else if (game.winner === game.player_2) {
+                        player2Content.style.fontWeight = 'bolder';
+                        player2Content.style.color = 'green';
+                    }
+
+                    playerCell.appendChild(playerContent);
+                    playerCell.appendChild(vsText);
+                    playerCell.appendChild(player2Content);
+                    playersRow.appendChild(playerCell);
+                    table.appendChild(playersRow);
+
+                    // Sets won
+                    const setsRow = document.createElement('tr');
+                    const setsCell = document.createElement('td');
+                    setsCell.style.width = '20%';
+                    setsCell.rowSpan = 3;
+                    setsCell.textContent = `${game.sets_won_player_1} : ${game.sets_won_player_2}`;
+                    setsRow.appendChild(setsCell);
+                    table.appendChild(setsRow);
+
+                    // Guess rows for players
+                    const guessRow = document.createElement('tr');
+                    const guessCell = document.createElement('td');
+                    guessCell.style.width = '40%';
+
+                    // Loop over each user's guess for this game
+                    game.guesses.forEach(userGuess => {
+                        const userGuessCell = document.createElement('div');
+                        userGuessCell.textContent = `${userGuess.username}: `;
+
+                        // If it's more than 1 hour before the start of the match "?"
+                        if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && userGuess.predicted_winner !== 'No guess') {
+                            userGuessCell.textContent += "?";
+                        } else if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && userGuess.predicted_winner === 'No guess') {
+                            userGuessCell.textContent += translations.noguess;
+                            userGuessCell.style.color = 'red';
+                        } else {
+                            let guessText;
+                            // Show the actual guess or "No guess" if it's empty
+                            if (userGuess.predicted_winner !== 'No guess') {
+                                guessText = userGuess.predicted_winner || translations.noguess;
+                            } else {
+                                guessText = translations.noguess;
+                            }
+                            userGuessCell.textContent += guessText;
+                            // Highlight the guess
+                            if (guessText === game.winner) {
+                                userGuessCell.style.color = 'green';
+                            } else if (game.winner === 'Game not finished' && guessText !== translations.noguess) {
+                                userGuessCell.style.color = 'orange';
+                                userGuessCell.textContent += translations.matchinprogress;
+                            } else if (guessText === translations.noguess) {
+                                userGuessCell.style.color = 'red';
+                            } else {
+                                userGuessCell.style.color = 'red';
+                            }
+                        }
+                        guessCell.appendChild(userGuessCell);
+                    });
+
+                    // Add hidden game_id input
+                    const gameIdInput = document.createElement('input');
+                    gameIdInput.type = 'hidden';
+                    gameIdInput.name = 'game_id';
+                    gameIdInput.value = game.game_id;  // Set the game ID value
+                    guessCell.appendChild(gameIdInput);
+
+                    guessRow.appendChild(guessCell);
+                    table.appendChild(guessRow);
+
+                    // Append the table
+                    roundTable.appendChild(table);
+
+                    // Add spacing between tables
+                    roundTable.appendChild(document.createElement('br'));
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching games:', error);
+            });
+        }
+    </script>
+
+    <!-- Function to display a table with the overall tournament guesses -->
+    <script>
+    function showOverallTournamentGuesses() {
+        // Store the logged in user id
+        var loggedInUserId = {{ logged_in_user_id | tojson }};
+        const roundTable = document.getElementById('roundTables');
+        roundTable.innerHTML = ''; // Clear any previous content
+
+        // Create the overall tournament table
+        const table = document.createElement('table');
+        table.classList.add('table', 'mt-3');
+
+        // Create the header row
+        const headerRow = document.createElement('tr');
+        const headerCell1 = document.createElement('th');
+        headerCell1.textContent = translations.categorytitle;
+        const headerCell2 = document.createElement('th');
+        headerCell2.textContent = translations.guesstitle;
+        headerRow.appendChild(headerCell1);
+        headerRow.appendChild(headerCell2);
+        table.appendChild(headerRow);
+
+        // Fetch player names and existing guesses as well as the time for each match from the database
+        Promise.all([
+            fetch('/get_players').then(response => response.json()), // Fetch player names
+            fetch('/get_user_tournament_guesses_for_group?group_code={{ group_code }}').then(response => response.json()), // Fetch existing guesses
+            fetch('/get_tournament_guesses_results').then(response => response.json()), // Fetch tournament results
+            fetch('/get_all_match_times').then(response => response.json()) // Fetch all match times
+        ])
+        .then(([players, tournamentGuesses, tournamentResults, matchTimes]) => {
+            if (!players || players.length === 0) {
+                console.error('No players found');
+                return;
+            }
+
+            // Ensure matchTimes contains match_times array
+            if (matchTimes && matchTimes.match_times) {
+                const matchTimesArray = matchTimes.match_times;
+                // Map each match time to a Date object, assigning the correct year and select the very first match_time of the first match of the tournament
+                const earliestMatchDate = new Date(Math.min(...matchTimes.match_times.map(date => new Date(date).getTime())));
+                // Calculate the 6 PM London cutoff time for that earliest match of the tournament
+                const cutoffTime = new Date(earliestMatchDate.getTime());
+                cutoffTime.setHours(18, 0, 0, 0); // Set to 6 PM
+
+                // Add rows for each category
+                const categories = [
+                    { label: translations.tournamentwinner, inputType: "dropdown", id: "tournamentWinner", guessType: "winner" },
+                    { label: translations.most180sthrown, inputType: "dropdown", id: "most180s", guessType: "most_180" },
+                    { label: translations.numberof180s, inputType: "number", id: "total180s", guessType: "num_180" },
+                    { label: translations.numberof9darters, inputType: "number", id: "total9Darters", guessType: "num_9_darters" },
+                    { label: translations.playerhighestcheckout, inputType: "dropdown", id: "highestCheckout", guessType: "highest_checkout" }
+                ];
+
+                categories.forEach(category => {
+                    const row = document.createElement('tr');
+                    row.classList.add('overall-tournament-guess-row-group'); // Add a class for styling
+
+                    // Generate Category label
+                    const labelCell = document.createElement('td');
+                    labelCell.textContent = category.label;
+                    row.appendChild(labelCell);
+
+                    // Create a container for all user guesses for this category
+                    const guessesContainer = document.createElement('td');
+
+                    tournamentGuesses.forEach(userGuess => {
+                        if (category.guessType === userGuess.guess_type) {
+                            // Generate the value field
+                            const valueCell = document.createElement('div');
+                            valueCell.textContent = `${userGuess.username}: `;
+
+                            // Check if the first match starts today and it's later than the cutoff time or the first match is already in the past
+                            const isBeforeCutoff = (new Date()).getTime() < earliestMatchDate.getTime();
+                            // If we are before the cutoff, show a ? for the guesses of other players if they have guesses and it is not "No guess"
+                            if (isBeforeCutoff && userGuess.user_id !== loggedInUserId && userGuess.value && userGuess.value !== 'No guess') {
+                                valueCell.textContent += "?";
+                            } else if (isBeforeCutoff && userGuess.user_id !== loggedInUserId && (userGuess.value === 'No guess' || !userGuess.value)) {
+                                valueCell.textContent += translations.noguess;
+                                valueCell.style.color = 'red';
+                            } else if (userGuess.user_id === loggedInUserId && (userGuess.value === 'No guess' || !userGuess.value)){
+                                const guessText = translations.noguess;
+                                valueCell.textContent += guessText;
+                                valueCell.style.color = 'red';
+                            } else {
+                                // Highlight correct guesses
+                                const correctResult = tournamentResults.find(result => result.guess_type === category.guessType);
+                                if (correctResult) {
+                                    if (['winner', 'most_180', 'num_9_darters', 'highest_checkout'].includes(correctResult.guess_type) && userGuess.value === correctResult.value) {
+                                        valueCell.textContent += userGuess.value;
+                                        valueCell.style.color = 'green';
+                                    } else if (['winner', 'most_180', 'num_9_darters', 'highest_checkout'].includes(correctResult.guess_type) && (userGuess.value === 'No guess' || !userGuess.value || userGuess.value !== correctResult.value)) {
+                                        if (userGuess.value === 'No guess' || !userGuess.value) {
+                                            valueCell.textContent += translations.noguess;
+                                        } else {
+                                            valueCell.textContent += userGuess.value;
+                                        }
+                                        valueCell.style.color = 'red';
+                                    } else if (correctResult.guess_type === 'num_180' && userGuess.value && userGuess.value !== 'No guess') {
+                                        const difference_180 = Math.abs(parseInt(userGuess.value, 10) - parseInt(correctResult.value, 10));
+                                        const scored_points = Math.max(40 - Math.floor(difference_180 / 10) * 5, 0); // Ensure points don't go negative
+                                        if (difference_180 === 0){
+                                            valueCell.style.color = 'green'
+                                        } else if (0 < difference_180 && difference_180 < 80) {
+                                            valueCell.style.color = 'orange';
+                                        } else {
+                                            valueCell.style.color = 'red';
+                                        }
+                                        valueCell.textContent += userGuess.value;
+                                        valueCell.textContent += translations.points_180
+                                            .replace('{}', difference_180)
+                                            .replace('{}', correctResult.value)
+                                            .replace('{}', scored_points);
+                                    } else if (correctResult.guess_type === 'num_180' && (userGuess.value === 'No guess' || !userGuess.value)){
+                                        valueCell.style.color = 'red';
+                                        valueCell.textContent += translations.noguess;
+                                        valueCell.textContent += translations.zeropoints;
+                                    }
+                                } else {
+                                    if (userGuess.value === 'No guess' || !userGuess.value) {
+                                        valueCell.textContent += translations.noguess;
+                                        valueCell.style.color = 'red';
+                                    } else {
+                                        valueCell.textContent += userGuess.value;
+                                    }
+
+                                }
+                            }
+
+                            // Append the valueCell to the guessesContainer
+                            guessesContainer.appendChild(valueCell);
+                        }
+                    });
+                    row.appendChild(guessesContainer);
+                    // Append valueCell after processing all guesses
+                    table.appendChild(row);
+                });
+
+                // Append the table to the roundTables container
+                roundTable.appendChild(table);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching players or existing guesses:', error);
+        });
+    }
+    </script>
+
+    <!-- Function to display a table with the leaderboard -->
+    <script>
+        function showLeaderboard() {
+            // Store the logged in user id
+            var loggedInUserId = {{ logged_in_user_id | tojson }};
+            const roundTable = document.getElementById('roundTables');
+            roundTable.innerHTML = ''; // Clear any previous content
+
+            // Create the overall tournament table
+            const table = document.createElement('table');
+            table.classList.add('table', 'mt-3');
+
+            // Create the header row
+            const headerRow = document.createElement('tr');
+            const headerCell1 = document.createElement('th');
+            headerCell1.textContent = translations.place;
+            const headerCell2 = document.createElement('th');
+            headerCell2.textContent = translations.username;
+            const headerCell3 = document.createElement('th');
+            headerCell3.textContent = translations.points;
+            headerRow.appendChild(headerCell1);
+            headerRow.appendChild(headerCell2);
+            headerRow.appendChild(headerCell3);
+            table.appendChild(headerRow);
+            // Fetch leaderboard data
+            fetch(`/get_points_per_group?group_code={{ group_code }}`)
+                .then(response => response.json())
+                .then(leaderboard_data => {
+                    if (!leaderboard_data || leaderboard_data.length === 0) {
+                        console.error('No leaderboard data available');
+                        return;
+                    }
+
+                    // Add leaderboard rows
+                    leaderboard_data.forEach((entry, index) => {
+                        const row = document.createElement('tr');
+
+                        // Place number
+                        const placeCell = document.createElement('td');
+                        placeCell.style.width = '5 %';
+                        placeCell.textContent = `${index + 1}.`;
+                        placeCell.style.padding = '8px';
+                        row.appendChild(placeCell);
+
+                        // Username
+                        const usernameCell = document.createElement('td');
+                        usernameCell.textContent = entry.username;
+                        usernameCell.style.width = '65 %';
+                        usernameCell.style.padding = '8px';
+                        row.appendChild(usernameCell);
+
+                        // Points
+                        const pointsCell = document.createElement('td');
+                        pointsCell.textContent = entry.points;
+                        pointsCell.style.width = '30 %';
+                        pointsCell.style.padding = '8px';
+                        row.appendChild(pointsCell);
+
+                        table.appendChild(row);
+                    });
+
+                    // Append the table to the parent element
+                    roundTable.appendChild(table);
+                })
+                .catch(error => {
+                    console.error('Error fetching leaderboard:', error);
+                });
+        }
+    </script>
+    <!-- Function to show the leaderboard when the group page is accessed -->
+    <script>
+    window.onload = function() {
+        showLeaderboard(); // Call the function as soon as the page loads
+        };
+    </script>
+
+{% endblock %}
+

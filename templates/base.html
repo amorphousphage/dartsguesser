@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- File to include in the header of most pages showing a back button, a dashboard button and the logged in player's current score -->
+<html lang="{{ g.lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Page{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        /* Set the body background image and style*/
+        body {
+            background-image: url('{{ url_for('static', filename='images/background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;  /* Ensure the body spans the entire viewport height */
+            color: #fff;  /* Optional: change text color for better contrast */
+        }
+
+        /* Optional: Add a semi-transparent overlay to make text readable */
+        .container {
+            background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent black background */
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1;  /* Ensure it is on top of the background */
+            color: #fff;
+        }
+        /* Set the style of the table */
+        .table {
+        border-collapse: collapse; /* Ensure borders don't overlap */
+        width: 100%;
+        color: #fff;
+        }
+
+        .table td {
+            border: none; /* Remove all borders from table cells */
+        }
+
+        .table tr:first-child td {
+            border-top: 2px solid white; /* Only show the top border for the first row */
+        }
+
+        /* Set style for the login and register forms */
+         .form-container {
+        text-align: center;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+        }
+
+        .form-group {
+        margin-bottom: 15px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        }
+
+        /* Set style for the how-it-works page */
+        .how-it-works-container {
+        margin: 5% auto;
+        max-width: 800px;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+        }
+
+        .how-it-works-link {
+                color: #007bff;
+                text-decoration: underline;
+            }
+
+            .how-it-works-link:hover {
+                color: #0056b3;
+                text-decoration: none;
+            }
+        .points-list {
+        list-style-type: disc;
+        margin-left: 20px;
+        }
+
+        .points-list li {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .points-list li strong {
+            color: #007bff;
+        }
+
+        .overall-tournament-guess-row-group {
+        border-bottom: 2px solid #ddd; /* Visible bottom border */
+        }
+
+        .overall-tournament-guess-row-group td {
+            padding: 10px; /* Add spacing inside cells */
+        }
+
+        .overall-tournament-guess-row-group:not(:last-child) {
+            margin-bottom: 10px; /* Add spacing between rows */
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Language selection dropdown -->
+    <div class="container mt-4">
+        <form action="{{ url_for('set_language') }}" method="POST">
+            <select name="language" onchange="this.form.submit()">
+                <option value="en" {% if g.lang == 'en' %}selected{% endif %}>English</option>
+                <option value="de" {% if g.lang == 'de' %}selected{% endif %}>Deutsch</option>
+                <option value="nl" {% if g.lang == 'nl' %}selected{% endif %}>Nederlands</option>
+                <option value="it" {% if g.lang == 'it' %}selected{% endif %}>Italiano</option>
+                <option value="fr" {% if g.lang == 'fr' %}selected{% endif %}>Francais</option>
+                <option value="es" {% if g.lang == 'es' %}selected{% endif %}>Espanol</option>
+            </select>
+        </form>
+    <!-- Display flash messages here -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert-container">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    </div>
+    <div class="container my-4">
+        <!-- Navigation Buttons on all pages except login, register, dashboard and home-->
+        {% if request.endpoint not in ['login', 'register', 'dashboard', 'home', 'forgot_password','reset_password'] %}
+            <div class="mb-3">
+                <!-- Back Button -->
+                <a href="javascript:history.back()" class="btn btn-secondary">{{ _('Back') }}</a>
+                <!-- Dashboard Button -->
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Dashboard</a>
+            </div>
+        {% endif %}
+        {% if request.endpoint not in ['login', 'register', 'home'] %}
+        <!-- Script to obtain the player's points -->
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch and display points and max points
+            fetch('/get_points')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.error) {
+                        document.getElementById('current-points').textContent = data.points;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching points:', error);
+                });
+        });
+        </script>
+        <!-- Show the points -->
+        <div>
+            {{ _('Your current points: ') }}<span id="current-points">0</span>
+        </div>
+        {% endif %}
+
+        {% block content %}
+        <!-- Page-Specific Content Goes Here -->
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS (Optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
