@@ -96,6 +96,10 @@ msgstr "( 0 punti)"
 msgid "({} points off from {} (+{} points))"
 msgstr "({} punti in meno rispetto a {} ( {} punti))"
 
+#: app.py:154 app.py:276
+msgid "odds"
+msgstr "quota"
+
 #: app.py:185
 msgid "Guess missed"
 msgstr "Immagino che mi sia sfuggito"
@@ -296,12 +300,12 @@ msgid "This is how points are awarded in DartsGuesser:"
 msgstr "Ecco come vengono assegnati i punti in DartsGuesser:"
 
 #: templates/how-it-works.html:10
-msgid "5 Points"
-msgstr "5 punti"
+msgid "The odds of a player"
+msgstr "La quota di un giocatore"
 
 #: templates/how-it-works.html:10
-msgid "For guessing the correct winner of any match."
-msgstr "Per indovinare il vincitore esatto di un incontro."
+msgid "For guessing the correct winner of any match you will be awarded the betting quote (from oddsportal.com) for this player."
+msgstr "Indovinando il vincitore corretto di una partita, ti verrà assegnata la quota (da oddsportal.com) per questo giocatore."
 
 #: templates/how-it-works.html:11 templates/how-it-works.html:14
 #: templates/how-it-works.html:15
