@@ -25,16 +25,24 @@ engine = create_engine(Config.SQLALCHEMY_DATABASE_URI)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Set up the Firefox WebDriver (headless)
+# Set up the Chrome WebDriver (headless)
 options = webdriver.FirefoxOptions()
-options.add_argument('--headless') 
+options.add_argument('--headless')
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--ignore-ssl-errors=yes')
+options.add_argument('--disable-gpu')
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--no-sandbox')
 
 # Set up a Webdriver (Selenium converting dynamically generated content into HTML code) for the Match Data
-driver = webdriver.Firefox(options=options)
+driver = webdriver.Remote(command_executor='http://192.168.178.97:4444/wd/hub',options=options)
 driver.get("https://www.oddsportal.com/darts/world/pdc-world-championship/standings/")
 
 # Wait for the page to load
-driver.implicitly_wait(20)
+driver.implicitly_wait(50)
+# Scroll to the end of the page to make sure all content is loaded
+#driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#time.sleep(30)  # Wait for content to load
 
 # Extract the html content and parse it
 html_content = driver.page_source
@@ -110,7 +118,7 @@ driver.quit()
 time.sleep(2)
 
 # Set up a Webdriver (Selenium converting dynamically generated content into HTML code) for the Match Data
-driver = webdriver.Firefox(options=options)
+driver = webdriver.Remote(command_executor='http://192.168.178.97:4444/wd/hub',options=options)
 driver.get("https://www.oddsportal.com/darts/world/pdc-world-championship/")
 
 # Scroll to the end of the page to make sure all content is loaded
@@ -129,7 +137,9 @@ for match_date in match_dates_divs:
     match_date_text = match_date.text.strip()
     match_dates.append(match_date_text)
 
-current_match_date = match_dates[0]
+# Initialize a variable to track the current match date
+match_date_index = 0
+current_match_date = match_dates[match_date_index]
 # Initialize a list to store match data
 odds_data = []
 previous_match_time = datetime.strptime('00:00','%H:%M')
@@ -149,20 +159,24 @@ for match in matches:
         # Inside this div, find the <p> tag containing the time
         time_tag = time_div.find('p')
         if time_tag:
-            # Obtain the time and remove the one hour time change to have the time in London Time
-            match_time = datetime.strptime(time_tag.get_text(strip=True),'%H:%M') - timedelta(hours=1)
+            # Obtain the time
+            match_time = datetime.strptime(time_tag.get_text(strip=True),'%H:%M')
 
     # Switch the match date to the next date if the time of the current match is before the one from the previous match
     if match_time < previous_match_time:
-        current_match_date = match_dates[+1]
-
+        # Take the next date index
+        match_date_index += 1
+        # Ensure that the match_date_index doesn't go out of bounds
+        if match_date_index <= len(match_dates):
+            current_match_date = match_dates[match_date_index]
+    
+    # Set the current match time to be the previous one
+    previous_match_time = match_time
     match_date = datetime.strptime(str(current_match_date), '%d %b %Y')
+    
     # Concatenate date and time
     date = datetime.combine(match_date, match_time.time())
     date = date.strftime('%Y-%m-%d %H:%M')
-
-    # Set the current match time to be the previous one
-    previous_match_time = match_time
 
     # Ensure we only have two odds (one for each player)
     if len(odds) == 2:
@@ -173,6 +187,7 @@ for match in matches:
             'odds_player1': odds[0],
             'odds_player2': odds[1]
         })
+print(odds_data)
 # Quit the webscraping
 driver.quit()
 
@@ -192,16 +207,18 @@ for match in list_of_all_matches:
             match['match_time'] = odds['date']
             break  # No need to check further odds once a match is found
 
-print(list_of_all_matches)
+# Sort the list by match_time (ascending order)
+list_of_all_matches.sort(key=lambda x: x["match_time"])
+
 # Update the data into the games table
 for game_data in list_of_all_matches:
     round_name, player_1, sets_won_player_1, player_2, sets_won_player_2, winner, odds_player_1, odds_player_2, match_time = game_data
-    print("game_data: ", game_data)
+    
     # Check if a game with the same round_name and players already exists, considering interchangeable players
     existing_game = session.query(Game).filter(
-        ((Game.round_name == round_name) &
-         ((Game.player_1 == player_1) & (Game.player_2 == player_2)) |
-         ((Game.player_1 == player_2) & (Game.player_2 == player_1)))
+        ((Game.round_name == game_data['round_name']) &
+         ((Game.player_1 == game_data['player_1']) & (Game.player_2 == game_data['player_2'])) |
+         ((Game.player_1 == game_data['player_2']) & (Game.player_2 == game_data['player_1'])))
     ).first()
 
     if existing_game:

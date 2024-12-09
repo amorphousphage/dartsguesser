@@ -1,0 +1,31 @@
+# Use the official Python image as the base
+FROM python:3.11-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the application files into the container
+COPY . /app
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    cron \
+    && rm -rf /var/lib/apt/lists/* 
+
+# Copy the crontab file into the container
+COPY crontab.txt /etc/cron.d/webscraper-cron
+
+# Set permissions for the crontab file
+RUN chmod 0644 /etc/cron.d/webscraper-cron
+
+# Apply the crontab
+RUN crontab /etc/cron.d/webscraper-cron
+
+# Create a log file for cron jobs
+RUN touch /var/log/cron.log
+
+# Command to run cron in the foreground
+CMD ["cron", "-f"]

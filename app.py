@@ -8,10 +8,12 @@ import string
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import requests
+import os
 
 app = Flask(__name__)
 app.config['BABEL_DEFAULT_LOCALE'] = 'en'  # Set default locale to English
-app.config['BABEL_SUPPORTED_LOCALES'] = ['en', 'de', 'it', 'fr', 'es', 'nl']  # Add all languages you're supporting
+app.config['BABEL_SUPPORTED_LOCALES'] = ['en', 'de', 'it', 'fr', 'es', 'nl']
+app.secret_key = os.environ.get("SECRET_KEY")
 app.config.from_object(Config)
 babel = Babel(app)
 

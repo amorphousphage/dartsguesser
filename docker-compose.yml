@@ -1,0 +1,61 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: dartsguesser_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    restart: always
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - SECRET_KEY=<enter_your_secret_key>
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=<enter_your_db_password>
+      - MYSQL_DB=<enter_your_db>
+    depends_on:
+      - db
+    networks:
+      - dartsguesser_network
+
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile.scraper
+    container_name: dartsguesser_scraper
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=<enter_your_db_password>
+      - MYSQL_DB=<enter_your_db>
+    volumes:
+      - .:/app
+    restart: always
+    shm_size: 4g
+    depends_on:
+      - db
+    networks:
+      - dartsguesser_network
+
+  db:
+    image: mysql:8.0
+    container_name: dartsguesser_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: <enter_your_db_password>
+      MYSQL_DATABASE: <enter_your_db>
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - dartsguesser_network
+
+volumes:
+  db_data:
+
+networks:
+  dartsguesser_network:
+    driver: bridge

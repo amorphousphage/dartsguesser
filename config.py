@@ -1,4 +1,5 @@
+import os
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://darts_user:4493abcd@localhost/dartsguesser'
+    SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = 'lol123'  # Use a strong secret key for sessions
