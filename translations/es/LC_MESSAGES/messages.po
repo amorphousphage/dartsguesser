@@ -391,6 +391,10 @@ msgstr "abandonar grupo"
 msgid "Make your tournament guesses"
 msgstr "Haz tus conjeturas en el torneo"
 
+#: templates/my-guesses.html:26
+msgid "Overall Tournament Guesses will lock at 6 pm of the day of the first match. Match guesses will lock one hour before scheduled start of the match."
+msgstr "Las predicciones generales del torneo se cerrarán a las 18:00 horas del día del primer partido. Las predicciones para un partido se cerrarán una hora antes del inicio programado del encuentro."
+
 #: templates/my-guesses.html:23
 msgid ""
 "Please make sure you save your guesses each time before you view another "

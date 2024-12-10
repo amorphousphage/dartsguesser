@@ -391,6 +391,10 @@ msgstr "Groep verlaten"
 msgid "Make your tournament guesses"
 msgstr "Maak je toernooischattingen"
 
+#: templates/my-guesses.html:26
+msgid "Overall Tournament Guesses will lock at 6 pm of the day of the first match. Match guesses will lock one hour before scheduled start of the match."
+msgstr "Toernooi-voorspellingen sluiten om 18:00 uur op de dag van de eerste wedstrijd. Wedstrijdvoorspellingen sluiten een uur voor de geplande starttijd van de wedstrijd."
+
 #: templates/my-guesses.html:23
 msgid ""
 "Please make sure you save your guesses each time before you view another "

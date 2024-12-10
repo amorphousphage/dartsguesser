@@ -397,6 +397,10 @@ msgid ""
 "round (or the overall tournament guesses)."
 msgstr "Veuillez vous assurer de sauvegarder vos suppositions à chaque fois avant de visionner un autre tour (ou les suppositions globales du tournoi)."
 
+#: templates/my-guesses.html:26
+msgid "Overall Tournament Guesses will lock at 6 pm of the day of the first match. Match guesses will lock one hour before scheduled start of the match."
+msgstr "Les pronostics généraux du tournoi seront verrouillés à 18h le jour du premier match. Les pronostics pour un match seront fermés une heure avant le début prévu de la rencontre."
+
 #: templates/my-guesses.html:27
 msgid "Save my guesses"
 msgstr "Garde mes suppositions"

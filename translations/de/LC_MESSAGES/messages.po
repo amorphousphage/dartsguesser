@@ -418,6 +418,10 @@ msgstr ""
 "Stellen Sie bitte sicher, dass Sie Ihre Tipps jedes Mal speichern, bevor Sie "
 "eine weitere Runde (oder die Turnier-Tipps) anzeigen."
 
+#: templates/my-guesses.html:26
+msgid "Overall Tournament Guesses will lock at 6 pm of the day of the first match. Match guesses will lock one hour before scheduled start of the match."
+msgstr "Turnier-Tipps müssen vor 18 Uhr am Tag des ersten Spiels abgegeben werden. Tipps für ein Spiel sind möglich bis eine Stunde vor geplantem Match Start."
+
 #: templates/my-guesses.html:27
 msgid "Save my guesses"
 msgstr "Meine Tipps speichern"
