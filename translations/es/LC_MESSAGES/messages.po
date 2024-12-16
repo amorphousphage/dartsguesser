@@ -62,6 +62,10 @@ msgstr "Inicie sesión para acceder al panel."
 msgid "Time of the Match: {} (GMT)"
 msgstr "Hora del partido: {} (GMT)"
 
+#: app.py:154 app.py:276
+msgid "(Match not finished yet)"
+msgstr "(Partido aún no terminado)"
+
 #: app.py:185 app.py:308
 msgid "No guess"
 msgstr "Sin adivinar"

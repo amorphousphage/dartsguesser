@@ -10,17 +10,17 @@
     <style>
         /* Set the body background image and style*/
         body {
-                margin: 0;
-                padding: 0;
-                min-height: 100vh;
-                color: #fff;
-                background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                                  url('{{ url_for('static', filename='images/background.jpg') }}');
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-                background-blend-mode: darken; /* Blend the dimming overlay with the image */
-            }
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #fff; /* Optional: text styling */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                              url('{{ url_for('static', filename='images/background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: darken; /* Blend the dimming overlay with the image */
+        }
 
         /* Optional: Add a semi-transparent overlay to make text readable */
         .container {

@@ -1,8 +1,8 @@
 # Define the mySQL data to pass to the cronjob
 MYSQL_HOST=db
 MYSQL_USER=root
-MYSQL_PASSWORD=<enter_your_db_password>
-MYSQL_DB=<enter_your_db>
+MYSQL_PASSWORD=4493abcd
+MYSQL_DB=dartsguesser
 
 # Run the webscraper every minute
-*/5 * * * * export MYSQL_HOST=$MYSQL_HOST && export MYSQL_USER=$MYSQL_USER && export MYSQL_PASSWORD=$MYSQL_PASSWORD && export MYSQL_DB=$MYSQL_DB && /usr/local/bin/python3 /app/webscraper.py >> /var/log/cron.log 2>&1
+* * * * * export MYSQL_HOST=$MYSQL_HOST && export MYSQL_USER=$MYSQL_USER && export MYSQL_PASSWORD=$MYSQL_PASSWORD && export MYSQL_DB=$MYSQL_DB && /usr/local/bin/python3 /app/webscraper.py >> /var/log/cron.log 2>&1

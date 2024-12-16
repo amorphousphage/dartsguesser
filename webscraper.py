@@ -133,8 +133,25 @@ soup = BeautifulSoup(html_content, 'html.parser')
 matches = soup.find_all('div', class_=re.compile('.*eventRow.*'))
 match_dates_divs = soup.find_all('div', class_='text-black-main font-main w-full truncate text-xs font-normal leading-5')
 match_dates = []
+
+# Iterate over the divs and handle the date format
 for match_date in match_dates_divs:
     match_date_text = match_date.text.strip()
+
+    # If "Today" is contained in the date set the date as today
+    if "Today" in match_date_text:
+        match_date_text = datetime.now().strftime("%d %b %Y")
+    
+    # If "Tomorrow" is contained in the date set the date as tomorrow
+    elif "Tomorrow" in match_date_text:
+        # Replace "Tomorrow" with tomorrow's date
+        match_date_text = (datetime.now() + timedelta(days=1)).strftime("%d %b %Y")
+    
+    # If "Yesterday" is contained in the date set the date as tomorrow
+    elif "Yesterday" in match_date_text:
+        # Replace "Yesterday" with yesterday's date
+        match_date_text = (datetime.now() - timedelta(days=1)).strftime("%d %b %Y")
+    
     match_dates.append(match_date_text)
 
 # Initialize a variable to track the current match date
@@ -187,7 +204,6 @@ for match in matches:
             'odds_player1': odds[0],
             'odds_player2': odds[1]
         })
-print(odds_data)
 # Quit the webscraping
 driver.quit()
 
@@ -206,6 +222,9 @@ for match in list_of_all_matches:
             match['odds_player_2'] = odds['odds_player2']
             match['match_time'] = odds['date']
             break  # No need to check further odds once a match is found
+
+# Remove all entries that don't have a match_time (past matches or matches without proper odds)
+list_of_all_matches = [match for match in list_of_all_matches if 'match_time' in match]
 
 # Sort the list by match_time (ascending order)
 list_of_all_matches.sort(key=lambda x: x["match_time"])

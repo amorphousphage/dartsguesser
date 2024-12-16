@@ -62,6 +62,10 @@ msgstr "Log in om toegang te krijgen tot het dashboard."
 msgid "Time of the Match: {} (GMT)"
 msgstr "Tijd van de wedstrijd: {} (GMT)"
 
+#: app.py:154 app.py:276
+msgid "(Match not finished yet)"
+msgstr "(Wedstrijd nog niet afgelopen)"
+
 #: app.py:185 app.py:308
 msgid "No guess"
 msgstr "Geen gok"

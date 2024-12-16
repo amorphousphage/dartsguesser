@@ -12,11 +12,11 @@ services:
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=production
-      - SECRET_KEY=<enter_your_secret_key>
+      - SECRET_KEY=jdGCQXPpLyv8g6cm4HDFzSKA
       - MYSQL_HOST=db
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=<enter_your_db_password>
-      - MYSQL_DB=<enter_your_db>
+      - MYSQL_PASSWORD=4493abcd
+      - MYSQL_DB=dartsguesser
     depends_on:
       - db
     networks:
@@ -30,8 +30,8 @@ services:
     environment:
       - MYSQL_HOST=db
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=<enter_your_db_password>
-      - MYSQL_DB=<enter_your_db>
+      - MYSQL_PASSWORD=4493abcd
+      - MYSQL_DB=dartsguesser
     volumes:
       - .:/app
     restart: always
@@ -46,8 +46,8 @@ services:
     container_name: dartsguesser_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: <enter_your_db_password>
-      MYSQL_DATABASE: <enter_your_db>
+      MYSQL_ROOT_PASSWORD: 4493abcd
+      MYSQL_DATABASE: dartsguesser
     volumes:
       - db_data:/var/lib/mysql
     networks:

@@ -70,7 +70,7 @@
                 // Get user's current time and convert to London time
                 const currentDate = new Date();
                 const userTimeZoneOffset = currentDate.getTimezoneOffset() * 60 * 1000; // Offset in ms
-                const londonTime = new Date(currentDate.getTime()- userTimeZoneOffset);
+                const londonTime = new Date(currentDate.getTime()+ userTimeZoneOffset);
 
                 games.forEach(game => {
                     const table = document.createElement('table');

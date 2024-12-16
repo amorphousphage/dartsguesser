@@ -63,6 +63,10 @@ msgid "Time of the Match: {} (GMT)"
 msgstr "Spielzeit: {} (GMT)"
 
 #: app.py:154 app.py:276
+msgid "(Match not finished yet)"
+msgstr "(Spiel noch nicht beendet)"
+
+#: app.py:154 app.py:276
 msgid "No guess"
 msgstr "Kein Tipp"
 
