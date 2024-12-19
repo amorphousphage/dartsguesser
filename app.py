@@ -348,7 +348,8 @@ def get_games():
                 'odds_player_2': game.odds_player_2,
                 'guess': game_guesses_dict.get(game.id, 'No guess')  # Default to 'No guess' if not found
             })
-
+        # Sort the list by match_time ascending
+        game_data = sorted(game_data, key=lambda x: datetime.strptime(x['match_time'], '%Y-%m-%d %H:%M'))
         return jsonify(game_data)
 
     return jsonify({'error': 'No round selected'}), 400
@@ -443,6 +444,9 @@ def get_games_for_group():
                 'odds_player_2': game.odds_player_2,
                 'guesses': guesses_with_user_name  # List of guesses with username and winner guess
             })
+
+        # Sort the list by match_time ascending
+        game_data = sorted(game_data, key=lambda x: datetime.strptime(x['match_time'], '%Y-%m-%d %H:%M'))
 
         return jsonify(game_data)
 
