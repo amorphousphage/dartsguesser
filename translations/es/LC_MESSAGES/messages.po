@@ -71,26 +71,26 @@ msgid "No guess"
 msgstr "Sin adivinar"
 
 #: app.py:185 app.py:308
-msgid "Tournament Winner (+ 20 Points)"
-msgstr "Ganador del torneo (20 puntos)"
+msgid "Tournament Winner (+ 10 Points)"
+msgstr "Ganador del torneo (10 puntos)"
 
 #: app.py:185 app.py:308
-msgid "Player with most 180s thrown (+ 10 Points)"
-msgstr "Jugador con más lanzamientos de 180 (10 puntos)"
+msgid "Player with most 180s thrown (+ 5 Points)"
+msgstr "Jugador con más lanzamientos de 180 (5 puntos)"
 
 #: app.py:185 app.py:308
 msgid ""
-"Number of 180s thrown total (+ max. 40 Points (-5 Points for every 10 "
+"Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 "
 "180s off))"
-msgstr "Número total de 180 lanzados (máximo 40 puntos (-5 puntos por cada 10 180 de descuento))"
+msgstr "Número total de 180 lanzados (máximo 20 puntos (-3 puntos por cada 10 180 de descuento))"
 
 #: app.py:185 app.py:308
-msgid "Number of 9-darters thrown (+ 20 Points)"
-msgstr "Número de 9 dardos lanzados (20 puntos)"
+msgid "Number of 9-darters thrown (+ 10 Points)"
+msgstr "Número de 9 dardos lanzados (10 puntos)"
 
 #: app.py:185 app.py:308
-msgid "Player with the highest checkout (+ 20 Points)"
-msgstr "Jugador con el checkout más alto (20 Puntos)"
+msgid "Player with the highest checkout (+ 10 Points)"
+msgstr "Jugador con el checkout más alto (10 Puntos)"
 
 #: app.py:185 app.py:308
 msgid "(+ 0 points)"

@@ -186,11 +186,11 @@ for match in matches:
         # Ensure that the match_date_index doesn't go out of bounds
         if match_date_index <= len(match_dates):
             current_match_date = match_dates[match_date_index]
-    
+
     # Set the current match time to be the previous one
     previous_match_time = match_time
     match_date = datetime.strptime(str(current_match_date), '%d %b %Y')
-    
+
     # Concatenate date and time
     date = datetime.combine(match_date, match_time.time())
     date = date.strftime('%Y-%m-%d %H:%M')
@@ -232,7 +232,7 @@ list_of_all_matches.sort(key=lambda x: x["match_time"])
 # Update the data into the games table
 for game_data in list_of_all_matches:
     round_name, player_1, sets_won_player_1, player_2, sets_won_player_2, winner, odds_player_1, odds_player_2, match_time = game_data
-    
+
     # Check if a game with the same round_name and players already exists, considering interchangeable players
     existing_game = session.query(Game).filter(
         ((Game.round_name == game_data['round_name']) &
@@ -241,8 +241,7 @@ for game_data in list_of_all_matches:
     ).first()
 
     if existing_game:
-        # If the game exists, update the record
-        existing_game.match_time = game_data['match_time']
+        # If the game exists, update the record except match time
         existing_game.sets_won_player_1 = game_data['sets_won_player_1']
         existing_game.sets_won_player_2 = game_data['sets_won_player_2']
         existing_game.winner = game_data['winner']

@@ -71,26 +71,26 @@ msgid "No guess"
 msgstr "Pas devinette"
 
 #: app.py:185 app.py:308
-msgid "Tournament Winner (+ 20 Points)"
-msgstr "Vainqueur du tournoi (20 points)"
+msgid "Tournament Winner (+ 10 Points)"
+msgstr "Vainqueur du tournoi (10 points)"
 
 #: app.py:185 app.py:308
-msgid "Player with most 180s thrown (+ 10 Points)"
-msgstr "Joueur avec le plus de 180 lancés (10 points)"
+msgid "Player with most 180s thrown (+ 5 Points)"
+msgstr "Joueur avec le plus de 180 lancés (5 points)"
 
 #: app.py:185 app.py:308
 msgid ""
-"Number of 180s thrown total (+ max. 40 Points (-5 Points for every 10 "
+"Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 "
 "180s off))"
-msgstr "Nombre total de 180 lancés (max. 40 points (-5 points pour chaque 10 180 de réduction))"
+msgstr "Nombre total de 180 lancés (max. 20 points (-3 points pour chaque 10 180 de réduction))"
 
 #: app.py:185 app.py:308
-msgid "Number of 9-darters thrown (+ 20 Points)"
-msgstr "Nombre de 9 fléchettes lancées (20 points)"
+msgid "Number of 9-darters thrown (+ 10 Points)"
+msgstr "Nombre de 9 fléchettes lancées (10 points)"
 
 #: app.py:185 app.py:308
-msgid "Player with the highest checkout (+ 20 Points)"
-msgstr "Joueur avec le paiement le plus élevé (20 points)"
+msgid "Player with the highest checkout (+ 10 Points)"
+msgstr "Joueur avec le paiement le plus élevé (10 points)"
 
 #: app.py:185 app.py:308
 msgid "(+ 0 points)"
