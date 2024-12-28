@@ -167,7 +167,7 @@
 
                         guessCell.appendChild(select);
                     } else {
-                        // Text for past matches or missed guesses (in case it is later than 9 am on matchday or after)
+                        // Text for past matches or missed guesses (in case it is later than 1 hour before the start of the match)
                         const guessText = document.createElement('div');
                         if (!game.guess || game.guess === 'No guess') {
                             guessText.textContent = translations.guessmissed;
@@ -318,7 +318,7 @@
                             }
                             inputCell.appendChild(inputField);
                         }
-                    // If we are past the cutoff make th form read only by showing only text
+                    // If we are past the cutoff make the form read only by showing only text
                     } else {
                         const guessText = document.createElement('div');
 

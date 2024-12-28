@@ -32,6 +32,7 @@
     var translations = {
         match_time: "{{ translate_match_time }}",
         noguess: "{{ translate_no_guess }}",
+        guessmissed: "{{ translate_guess_missed }}",
         matchinprogress: "{{ translate_match_in_progress }}",
         categorytitle: "{{ translate_category_title }}",
         guesstitle: "{{ translate_guess_title }}",
@@ -146,18 +147,18 @@
                             let guessText;
                             // Show the actual guess or "No guess" if it's empty
                             if (userGuess.predicted_winner !== 'No guess') {
-                                guessText = userGuess.predicted_winner || translations.noguess;
+                                guessText = userGuess.predicted_winner || translations.guessmissed;
                             } else {
-                                guessText = translations.noguess;
+                                guessText = translations.guessmissed;
                             }
                             userGuessCell.textContent += guessText;
                             // Highlight the guess
                             if (guessText === game.winner) {
                                 userGuessCell.style.color = 'green';
-                            } else if (game.winner === 'Game not finished' && guessText !== translations.noguess) {
+                            } else if (game.winner === 'Game not finished' && guessText !== translations.guessmissed) {
                                 userGuessCell.style.color = 'orange';
                                 userGuessCell.textContent += translations.matchinprogress;
-                            } else if (guessText === translations.noguess) {
+                            } else if (guessText === translations.guessmissed) {
                                 userGuessCell.style.color = 'red';
                             } else {
                                 userGuessCell.style.color = 'red';

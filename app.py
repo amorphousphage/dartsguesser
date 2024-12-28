@@ -184,7 +184,7 @@ def how_it_works():
 @app.route('/my-guesses')
 def my_guesses():
     # Logic to display the user's guesses (you can customize this later)
-    return render_template('my-guesses.html', translate_match_time=_('Time of the Match: {} (GMT)'), translate_no_guess=_('No guess'), translate_match_in_progress=_('(Match not finished yet)'), translate_tournament_winner=_('Tournament Winner (+ 10 Points)'), translate_most_180s_thrown=_('Player with most 180s thrown (+ 5 Points)'), translate_number_180s_thrown=_('Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 180s off))'), translate_number_of_9_darters=_('Number of 9-darters thrown (+ 10 Points)'), translate_player_highest_checkout=_('Player with the highest checkout (+ 10 Points)'), translate_zero_points=_('(+ 0 points)'), translate_num180_points=_('({} points off from {} (+{} points))'), translate_guess_missed=_('Guess missed'), translate_odds=_('odds'))
+    return render_template('my-guesses.html', translate_match_time=_('Time of the Match: {} (GMT)'), translate_no_guess=_('No guess'), translate_match_in_progress=_('(Match not finished yet)'), translate_tournament_winner=_('Tournament Winner (+ 10 Points)'), translate_most_180s_thrown=_('Player with most 180s thrown (+ 5 Points)'), translate_number_180s_thrown=_('Number of 180s thrown total (+ max. 20 Points (-2.5 Points for every 10 180s off))'), translate_number_of_9_darters=_('Number of 9-darters thrown (+ 10 Points)'), translate_player_highest_checkout=_('Player with the highest checkout (+ 10 Points)'), translate_zero_points=_('(+ 0 points)'), translate_num180_points=_('({} points off from {} (+{} points))'), translate_guess_missed=_('Guess missed'), translate_odds=_('odds'))
 
 ##############################
 # Routes for handling groups #
@@ -307,7 +307,7 @@ def group_page(group_code):
     if group_name_data is not None:
         group_name = group_name_data.name
 
-        return render_template('group_page.html', group_code=group_code, group_name=group_name, logged_in_user_id=user_id, translate_match_time=_('Time of the Match: {} (GMT)'), translate_no_guess=_('No guess'), translate_match_in_progress=_('(Match not finished yet)'), translate_category_title=_('Category'), translate_guess_title=_('Guess'), translate_tournament_winner=_('Tournament Winner (+ 10 Points)'), translate_most_180s_thrown=_('Player with most 180s thrown (+ 5 Points)'), translate_number_180s_thrown=_('Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 180s off))'), translate_number_of_9_darters=_('Number of 9-darters thrown (+ 10 Points)'), translate_player_highest_checkout=_('Player with the highest checkout (+ 10 Points)'), translate_zero_points=_('(+ 0 points)'), translate_num180_points=_('({} points off from {} (+{} points))'), translate_place_title=_('Place'), translate_username_title=_('Username'), translate_points_title=_('Points'), translate_points_180_calc=_('({} points off from {} (+{} points))'), translate_odds=_('odds'))
+        return render_template('group_page.html', group_code=group_code, group_name=group_name, logged_in_user_id=user_id, translate_match_time=_('Time of the Match: {} (GMT)'), translate_no_guess=_('No guess'), translate_match_in_progress=_('(Match not finished yet)'), translate_category_title=_('Category'), translate_guess_title=_('Guess'), translate_tournament_winner=_('Tournament Winner (+ 10 Points)'), translate_most_180s_thrown=_('Player with most 180s thrown (+ 5 Points)'), translate_number_180s_thrown=_('Number of 180s thrown total (+ max. 20 Points (-2.5 Points for every 10 180s off))'), translate_number_of_9_darters=_('Number of 9-darters thrown (+ 10 Points)'), translate_player_highest_checkout=_('Player with the highest checkout (+ 10 Points)'), translate_zero_points=_('(+ 0 points)'), translate_num180_points=_('({} points off from {} (+{} points))'), translate_place_title=_('Place'), translate_username_title=_('Username'), translate_points_title=_('Points'), translate_points_180_calc=_('({} points off from {} (+{} points))'), translate_guess_missed=_('Guess missed'), translate_odds=_('odds'))
     else:
         return Response(status=204)
 
@@ -554,7 +554,7 @@ def get_points():
     POINTS_NUM_180 = 20
     POINTS_NUM_9_DARTERS = 10
     POINTS_HIGHEST_CHECKOUT = 10
-    POINTS_DEDUCTION_PER_10_OFF = 3
+    POINTS_DEDUCTION_PER_10_OFF = 2.5
 
     current_user_id = session.get('user_id')
 

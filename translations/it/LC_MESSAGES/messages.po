@@ -80,9 +80,9 @@ msgstr "Giocatore con più 180 lanciati (5 punti)"
 
 #: app.py:185 app.py:308
 msgid ""
-"Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 "
+"Number of 180s thrown total (+ max. 20 Points (-2.5 Points for every 10 "
 "180s off))"
-msgstr "Numero di 180 lanciati in totale (max. 20 punti (-3 punti per ogni 10 180 disattivati))"
+msgstr "Numero di 180 lanciati in totale (max. 20 punti (-2.5 punti per ogni 10 180 disattivati))"
 
 #: app.py:185 app.py:308
 msgid "Number of 9-darters thrown (+ 10 Points)"

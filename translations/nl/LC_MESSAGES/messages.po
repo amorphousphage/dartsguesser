@@ -80,9 +80,9 @@ msgstr "Speler met de meeste 180's gegooid (5 punten)"
 
 #: app.py:185 app.py:308
 msgid ""
-"Number of 180s thrown total (+ max. 20 Points (-3 Points for every 10 "
+"Number of 180s thrown total (+ max. 20 Points (-2.5 Points for every 10 "
 "180s off))"
-msgstr "Totaal aantal 180s gegooid (max. 20 punten (-3 punten voor elke 10 180s uit))"
+msgstr "Totaal aantal 180s gegooid (max. 20 punten (-2.5 punten voor elke 10 180s uit))"
 
 #: app.py:185 app.py:308
 msgid "Number of 9-darters thrown (+ 10 Points)"
