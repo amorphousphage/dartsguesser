@@ -159,7 +159,8 @@ match_date_index = 0
 current_match_date = match_dates[match_date_index]
 # Initialize a list to store match data
 odds_data = []
-previous_match_time = datetime.strptime('00:00','%H:%M')
+previous_match_time_list = []
+previous_match_time_list.append(datetime.strptime('00:00','%H:%M'))
 # Loop over each match
 for match in matches:
     # Get the player names from the <a> tags with 'title' attribute
@@ -176,34 +177,48 @@ for match in matches:
         # Inside this div, find the <p> tag containing the time
         time_tag = time_div.find('p')
         if time_tag:
-            # Obtain the time
-            match_time = datetime.strptime(time_tag.get_text(strip=True),'%H:%M')
-
+            try:
+                # Obtain the time
+                match_time = datetime.strptime(time_tag.get_text(strip=True),'%H:%M')
+            except ValueError:
+                # Set the match time to be None if it is invalid
+                match_time = None
     # Switch the match date to the next date if the time of the current match is before the one from the previous match
-    if match_time < previous_match_time:
+    if match_time is not None and match_time < previous_match_time_list[-1]:
         # Take the next date index
         match_date_index += 1
         # Ensure that the match_date_index doesn't go out of bounds
         if match_date_index <= len(match_dates):
             current_match_date = match_dates[match_date_index]
 
-    # Set the current match time to be the previous one
-    previous_match_time = match_time
-    match_date = datetime.strptime(str(current_match_date), '%d %b %Y')
+    if match_time is not None:
+        # Set the current match time to be the previous one
+        previous_match_time_list.append(match_time)
+        match_date = datetime.strptime(str(current_match_date), '%d %b %Y')
 
-    # Concatenate date and time
-    date = datetime.combine(match_date, match_time.time())
-    date = date.strftime('%Y-%m-%d %H:%M')
+        # Concatenate date and time
+        date = datetime.combine(match_date, match_time.time())
+        date = date.strftime('%Y-%m-%d %H:%M')
 
-    # Ensure we only have two odds (one for each player)
-    if len(odds) == 2:
-        odds_data.append({
-            'date': date,
-            'player1': player_names[0],
-            'player2': player_names[1],
-            'odds_player1': odds[0],
-            'odds_player2': odds[1]
-        })
+        # Ensure we only have two odds (one for each player)
+        if len(odds) == 2:
+            odds_data.append({
+                'date': date,
+                'player1': player_names[0],
+                'player2': player_names[1],
+                'odds_player1': odds[0],
+                'odds_player2': odds[1]
+            })
+    else:
+        if len(odds) == 2:
+            odds_data.append({
+                'date': None,
+                'player1': player_names[0],
+                'player2': player_names[1],
+                'odds_player1': odds[0],
+                'odds_player2': odds[1]
+            })
+
 # Quit the webscraping
 driver.quit()
 
@@ -241,7 +256,9 @@ for game_data in list_of_all_matches:
     ).first()
 
     if existing_game:
-        # If the game exists, update the record except match time
+        # If the game exists, update the record and update match time only if it is valid
+        if game_data['match_time'] is not None:
+            existing_game.match_time = game_data['match_time']
         existing_game.sets_won_player_1 = game_data['sets_won_player_1']
         existing_game.sets_won_player_2 = game_data['sets_won_player_2']
         existing_game.winner = game_data['winner']
