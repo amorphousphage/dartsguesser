@@ -266,7 +266,7 @@ msgstr "Runde 3"
 
 #: templates/group_page.html:19 templates/my-guesses.html:15
 msgid "Final 16"
-msgstr "Finale 16"
+msgstr "Achtelfinale"
 
 #: templates/group_page.html:20 templates/my-guesses.html:16
 msgid "Quarter Final"
