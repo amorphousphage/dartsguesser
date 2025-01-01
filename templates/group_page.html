@@ -140,7 +140,7 @@
                         // If it's more than 1 hour before the start of the match "?"
                         if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && userGuess.predicted_winner !== 'No guess') {
                             userGuessCell.textContent += "?";
-                        } else if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && (userGuess.predicted_winner === 'No guess' || !userGuess.predicted_winner)) {
+                        } else if (londonTime < matchDayCutoff && userGuess.predicted_winner === 'No guess') {
                             userGuessCell.textContent += translations.noguess;
                             userGuessCell.style.color = 'red';
                         } else {
