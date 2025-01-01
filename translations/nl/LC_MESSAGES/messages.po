@@ -313,29 +313,29 @@ msgstr "Als je de juiste winnaar van een wedstrijd raadt, ontvang je de notering
 
 #: templates/how-it-works.html:11 templates/how-it-works.html:14
 #: templates/how-it-works.html:15
-msgid "20 Points"
-msgstr "20 punten"
+msgid "10 Points"
+msgstr "10 punten"
 
 #: templates/how-it-works.html:11
 msgid "For predicting the correct World Champion."
 msgstr "Voor het voorspellen van de juiste wereldkampioen."
 
 #: templates/how-it-works.html:12
-msgid "10 Points"
-msgstr "10 punten"
+msgid "5 Points"
+msgstr "5 punten"
 
 #: templates/how-it-works.html:12
 msgid "For correctly guessing the player with the most 180s."
 msgstr "Voor het correct raden van de speler met de meeste 180's."
 
 #: templates/how-it-works.html:13
-msgid "Up to 40 Points"
-msgstr "Maximaal 40 punten"
+msgid "Up to 20 Points"
+msgstr "Maximaal 20 punten"
 
 #: templates/how-it-works.html:13
 msgid ""
 "For guessing the number of thrown 180s throughout the tournament. For "
-"every 10 180s you are off, you will lose 5 points from the maximum of 40."
+"every 10 180s you are off, you will lose 2.5 points from the maximum of 20."
 " No negative points are awarded."
 msgstr "Voor het raden van het aantal gegooide 180's tijdens het toernooi. "
 
