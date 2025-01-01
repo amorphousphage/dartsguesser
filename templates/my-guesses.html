@@ -321,8 +321,11 @@
                     // If we are past the cutoff make the form read only by showing only text
                     } else {
                         const guessText = document.createElement('div');
-
-                        guessText.textContent = selectedValue;
+                        if (selectedValue === translations.noguess) {
+                            guessText.textContent = translations.guessmissed;
+                        } else { 
+                            guessText.textContent = selectedValue;
+                        }
                         inputCell.appendChild(guessText);
                     }
                     row.appendChild(inputCell);

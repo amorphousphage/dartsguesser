@@ -140,7 +140,7 @@
                         // If it's more than 1 hour before the start of the match "?"
                         if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && userGuess.predicted_winner !== 'No guess') {
                             userGuessCell.textContent += "?";
-                        } else if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && userGuess.predicted_winner === 'No guess') {
+                        } else if (londonTime < matchDayCutoff && userGuess.user_id !== loggedInUserId && (userGuess.predicted_winner === 'No guess' || !userGuess.predicted_winner)) {
                             userGuessCell.textContent += translations.noguess;
                             userGuessCell.style.color = 'red';
                         } else {
@@ -271,6 +271,10 @@
                                 valueCell.style.color = 'red';
                             } else if (userGuess.user_id === loggedInUserId && (userGuess.value === 'No guess' || !userGuess.value)){
                                 const guessText = translations.noguess;
+                                valueCell.textContent += guessText;
+                                valueCell.style.color = 'red';
+                            } else if (!isBeforeCutoff && (userGuess.value === 'No guess' || !userGuess.value)){
+                                const guessText = translations.guessmissed
                                 valueCell.textContent += guessText;
                                 valueCell.style.color = 'red';
                             } else {
