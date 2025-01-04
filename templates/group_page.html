@@ -293,7 +293,7 @@
                                         valueCell.style.color = 'red';
                                     } else if (correctResult.guess_type === 'num_180' && userGuess.value && userGuess.value !== 'No guess') {
                                         const difference_180 = Math.abs(parseInt(userGuess.value, 10) - parseInt(correctResult.value, 10));
-                                        const scored_points = Math.max(40 - Math.floor(difference_180 / 10) * 5, 0); // Ensure points don't go negative
+                                        const scored_points = Math.max(20 - Math.floor(difference_180 / 10) * 2.5, 0); // Ensure points don't go negative
                                         if (difference_180 === 0){
                                             valueCell.style.color = 'green'
                                         } else if (0 < difference_180 && difference_180 < 80) {
